@@ -26,8 +26,8 @@ public class ElevatorConstants {
 
     public static final CANBus CAN_BUS = new CANBus("canivore");
 
-    public static final int LEFT_ID = 0;
-    public static final int RIGHT_ID = 0;
+    public static final int LEFT_ID = 13;
+    public static final int RIGHT_ID = 14;
 
     public static final double REDUCTION = 25.0 / 1.0; // 25 rotations of motor one rotation of mechanism
 
@@ -38,7 +38,7 @@ public class ElevatorConstants {
     public static final double kI = 0;
     public static final double kD = 0.0;
 
-    public static final double kS = 0.0;
-    public static final double kG = 0.0;
-    public static final double kV = 0.0;
+    public static final double kS = 0.03;
+    public static final double kG = 0.25;
+    public static final double kV = 2.63;
 }

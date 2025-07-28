@@ -1,5 +1,8 @@
 package frc.robot.subsystems.elevator;
 
+import java.util.function.Supplier;
+
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -42,6 +45,7 @@ public class Elevator extends SubsystemBase {
         motionMagicVoltage = new MotionMagicVoltage(0.0).withSlot(0);
         dutyCycle = new DutyCycleOut(0.0);
         voltageOut = new VoltageOut(0.0);
+        this.desiredState = State.HOME;
 
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         config.Slot0 = new Slot0Configs()
@@ -56,7 +60,7 @@ public class Elevator extends SubsystemBase {
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.MotionMagic.MotionMagicCruiseVelocity = ElevatorConstants.MAX_VELOCITY_ROT_PER_SEC;
         config.MotionMagic.MotionMagicAcceleration = ElevatorConstants.MAX_ACCELERATION_ROT_PER_SEC_2;
-        leftMotor.getConfigurator().apply(config, 0.25);
+        tryUntilOk(5, () -> leftMotor.getConfigurator().apply(config, 0.25));
         zeroEncoders();
     }
 
@@ -74,6 +78,8 @@ public class Elevator extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Elevator/PositionRot", leftMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Elevator/velocity", leftMotor.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Elevator/acceleration", leftMotor.getAcceleration().getValueAsDouble());
         if (!isManual) {
             leftMotor.setControl(
                 motionMagicVoltage.withPosition(desiredState.getAngle().getRotations()));
@@ -105,5 +111,13 @@ public class Elevator extends SubsystemBase {
 
     public void runCharacterizer() {
         runElevator(volts.get());
+    }
+
+    /** Attempts to run the command until no error is produced. */
+    public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command) {
+        for (int i = 0; i < maxAttempts; i++) {
+            var error = command.get();
+            if (error.isOK()) break;
+        }
     }
 }
