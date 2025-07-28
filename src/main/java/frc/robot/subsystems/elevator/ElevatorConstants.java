@@ -31,10 +31,10 @@ public class ElevatorConstants {
 
     public static final double REDUCTION = 25.0 / 1.0; // 25 rotations of motor one rotation of mechanism
 
-    public static final Double MAX_VELOCITY_ROT_PER_SEC = 25.0;
-    public static final Double MAX_ACCELERATION_ROT_PER_SEC_2 = 40.0;
+    public static final Double MAX_VELOCITY_ROT_PER_SEC = 15.0;
+    public static final Double MAX_ACCELERATION_ROT_PER_SEC_2 = 20.0;
 
-    public static final double kP = 0.0;
+    public static final double kP = 18.67;
     public static final double kI = 0;
     public static final double kD = 0.0;
 

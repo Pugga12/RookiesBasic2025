@@ -37,7 +37,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     s_Claw = new Claw();
     s_Elevator = new Elevator();
-    s_Elevator.setDefaultCommand(Commands.run(() -> s_Elevator.runCharacterizer(), s_Elevator));
+    // s_Elevator.setDefaultCommand(Commands.run(() -> s_Elevator.runCharacterizer(), s_Elevator));
     configureBindings();
   }
 

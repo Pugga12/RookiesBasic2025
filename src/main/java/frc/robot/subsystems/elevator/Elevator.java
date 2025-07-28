@@ -80,6 +80,7 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Elevator/PositionRot", leftMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Elevator/velocity", leftMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Elevator/acceleration", leftMotor.getAcceleration().getValueAsDouble());
+        SmartDashboard.putNumber("Elevator/Goal", desiredState.getAngle().getRotations());
         if (!isManual) {
             leftMotor.setControl(
                 motionMagicVoltage.withPosition(desiredState.getAngle().getRotations()));

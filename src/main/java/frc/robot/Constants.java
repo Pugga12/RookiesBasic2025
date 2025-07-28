@@ -17,5 +17,5 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
-  public static final boolean TUNING_MODE = true;
+  public static final boolean TUNING_MODE = false;
 }
