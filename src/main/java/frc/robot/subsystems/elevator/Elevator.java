@@ -14,6 +14,8 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -30,6 +32,7 @@ public class Elevator extends SubsystemBase {
     private final VoltageOut voltageOut;
     private final TunableNumber volts
         = new TunableNumber("Elevator/Volts", 0.0);
+    private final DigitalInput bottomLimit = new DigitalInput(0);
 
     private ElevatorConstants.State desiredState;
     private double voltage = 0.0;
@@ -81,7 +84,10 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Elevator/velocity", leftMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Elevator/acceleration", leftMotor.getAcceleration().getValueAsDouble());
         SmartDashboard.putNumber("Elevator/Goal", desiredState.getAngle().getRotations());
-        if (!isManual) {
+        boolean shouldRun = !isManual &&
+            !(atBottomLimit() && Math.signum(MathUtil.applyDeadband(getVelocityRotPerSec(), 0.1)) == -1) &&
+            !(atTopLimit() && Math.signum(MathUtil.applyDeadband(getVelocityRotPerSec(), 0.1)) == 1);
+        if (shouldRun) {
             leftMotor.setControl(
                 motionMagicVoltage.withPosition(desiredState.getAngle().getRotations()));
         }
@@ -121,4 +127,22 @@ public class Elevator extends SubsystemBase {
             if (error.isOK()) break;
         }
     }
+
+    public boolean atBottomLimit() {
+        return !bottomLimit.get();
+    }
+
+    public boolean atTopLimit() {
+        return getPosition() > ElevatorConstants.MAX_ROTATIONS;
+    }
+
+    public double getPosition() {
+        return leftMotor.getPosition().getValueAsDouble();
+    }
+
+    public double getVelocityRotPerSec() {
+        return leftMotor.getVelocity().getValueAsDouble();
+    }
+
+
 }

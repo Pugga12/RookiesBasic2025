@@ -41,4 +41,6 @@ public class ElevatorConstants {
     public static final double kS = 0.03;
     public static final double kG = 0.25;
     public static final double kV = 2.63;
+
+    public static final double MAX_ROTATIONS = Units.radiansToRotations(24.0);
 }
